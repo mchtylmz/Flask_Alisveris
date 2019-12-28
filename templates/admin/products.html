@@ -1,0 +1,286 @@
+{% include 'admin/header.html' %}
+<!-- Include stylesheet -->
+<link href="/static/css/quill.snow.css" rel="stylesheet">
+
+<div class="page-section section pt-50 pb-50">
+  <div class="container">
+    {% include 'section/flash.html' %}
+    <div class="col-12 mt-0 mb-30">
+        <ul class="nav nav-tabs-five">
+            <li><a class="{% if activaTab == 'urunler' %} active {% endif %}" data-toggle="tab" href="#urunler">Ürünler</a></li>
+            <li><a class="{% if activaTab == 'ekle' %} active {% endif %}" data-toggle="tab" href="#urun_ekle">Ürün Ekle</a></li>
+            {% if activaTab == 'duzenle' %}
+            <li><a class="active" data-toggle="tab" href="#urun_duzenle">Ürün Düzenle</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="tab-content clearfix pt-10 pb-10 pl-10">
+      <div class="tab-pane {% if activaTab == 'urunler' %} active {% endif %}" id="urunler">
+        <!------- Ürünler -------->
+        <form class="contact-form mb-20">
+          <div class="row">
+            <div class="col-md-8">
+              <input id="input" type="text" onkeyup="myFunction()" placeholder="Ürün Adına Göre Arama...">
+            </div>
+            <div class="col-md-4">
+              <style media="screen">
+                .arakategori {
+                  width: 100%;
+                  border: 1px solid #999999;
+                  border-radius: 50px;
+                  line-height: 44px;
+                  height: 45px;
+                }
+                .arakategori .list {
+                  width: 100%;
+                }
+              </style>
+              <select class="arakategori nice-select" id="selectFind">
+                <option value="">Tüm Kategoriler</option>
+                {% for cat in categories %}
+                <option>{{cat.name}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </form>
+        <div class="cart-table table-responsive mb-40">
+          <table class="table" id="ProductTable">
+              <thead>
+                  <tr>
+                      <th class="pro-price">ID</th>
+                      <th class="pro-price text-left">Ürün</th>
+                      <th class="pro-price">Fiyat</th>
+                      <th class="pro-price">Kategori</th>
+                      <th class="pro-price">Tarih</th>
+                      <th class="pro-remove"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% if products %}
+                {% for product in products %}
+                <tr>
+                    <td class="pro-price">{{product.id}}</td>
+                    <td class="pro-price text-left">{{product.title}}</td>
+                    <td class="pro-price">₺{{product.price}}</td>
+                    <td class="pro-price">{% for category in product.categories %} {{category.name}} {% endfor %}</td>
+                    <td class="pro-price">{{product.create.strftime('%d.%m.%Y %H:%M')}}</td>
+                    <td class="pro-remove">
+                      <a target="_blank" href="/urun/{{product.id}}/{{product.title}}"><i class="fa fa-eye"></i> Görüntüle</a>
+                      <a href="/admin/urunler?duzenle={{product.id}}"><i class="fa fa-edit"></i> Düzenle</a>
+                      <a href="/admin/urunsil/{{product.id}}"><i class="fa fa-trash-o"></i> Sil</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td class="pro-title" colspan="6">Ürün Bulunamadı!..</td>
+                </tr>
+                {% endif %}
+              </tbody>
+          </table>
+        </div>
+        <!------- Ürünler -------->
+      </div>
+      <div class="tab-pane {% if activaTab == 'ekle' %} active {% endif %}" id="urun_ekle">
+        <!------- Ürün Ekle -------->
+        <style media="screen">
+          #contact-form .nice-select {
+            width: 100%;
+            border: 1px solid #999999;
+            border-radius: 50px;
+            line-height: 50px;
+            height: 51px;
+          }
+          #contact-form .nice-select .list {
+            width: 100%;
+          }
+          .home-fly {
+              border-radius: 24px;
+              border: none;
+              background-color: #f5d730;
+              border-color: #f5d730;
+              padding: 12.5px 50px;
+              font-size: 14px;
+          }
+          .home-fly:hover {
+              color: #FFF !important;
+          }
+          #editor, #editor2 {
+            height: 275px;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+          }
+        </style>
+        <form id="contact-form" action="/admin/urunekle" method="post" class="contact-form mb-20" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="urun_adi">Ürün Adı *</label>
+                    <input id="urun_adi" type="text" name="urun_adi" placeholder="Ürün Adı" required>
+                </div>
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="urun_fiyat">Ürün Fiyat (TL) *</label>
+                    <input id="urun_fiyat" type="number" name="urun_fiyat" placeholder="Ürün Fiyatı" step="0.01" required>
+                </div>
+                <div class="col-md-12 col-12 mb-25">
+                    <label for="urun_onaciklama">Ürün Ön Açıklama</label>
+                    <textarea id="urun_onaciklama" name="urun_onaciklama" rows="4" style="height:75px;" placeholder="Ürün hakkında kısa açıklama.."></textarea>
+                </div>
+                <div class="col-md-12 col-12 mb-25">
+                    <label for="urun_aciklama">Ürün Açıklama</label>
+                    <textarea id="urun_aciklama" name="urun_aciklama" rows="8" style="display:none"></textarea>
+                    <div id="editor"></div>
+                </div>
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="kategori">Ürün Kategorisi *</label>
+                    <select class="nice-select" name="urun_kategori" required>
+                      {% for cat in categories %}
+                      <option value="{{cat.id}}">{{cat.id}} - {{cat.name}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-6 col-12 mb-25">
+                  <div class="account-image-upload">
+                    <label for="kategori">Ürün Resmi *</label>
+                    <input type="file" name="file" id="account-image-upload" required>
+                  </div>
+                </div>
+                <div class="col-md-12 col-12 text-center">
+                  <button type="submit" class="home-fly mt-10 btn btn-round">Ürün Ekle</button>
+                </div>
+            </div>
+        </form>
+        <!------- Ürün Ekle -------->
+      </div>
+      <div class="tab-pane {% if activaTab == 'duzenle' %} active {% endif %}" id="urun_duzenle">
+        <!------- Ürün Düzenle -------->
+        {% if product %}
+        <form id="contact-form" action="/admin/urunguncelle" method="post" class="contact-form mb-20" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="urun_adi">Ürün Adı *</label>
+                    <input id="urun_adi" type="text" name="urun_adi_duzenle" value="{{product.title}}" required>
+                </div>
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="urun_fiyat">Ürün Fiyat (TL) *</label>
+                    <input id="urun_fiyat" type="number" name="urun_fiyat_duzenle" value="{{product.price}}" step="0.01" required>
+                </div>
+                <div class="col-md-12 col-12 mb-25">
+                    <label for="urun_onaciklama">Ürün Ön Açıklama</label>
+                    <textarea id="urun_onaciklama" name="urun_onaciklama_duzenle" rows="4" style="height:75px;" required>{{product.brief}}</textarea>
+                </div>
+                <div class="col-md-12 col-12 mb-25">
+                    <label for="urun_aciklama">Ürün Açıklama</label>
+                    <textarea id="urun_aciklama" name="urun_aciklama_duzenle" rows="8" style="display:none">{{product.description}}</textarea>
+                    <div id="editor2">{{product.description | safe}}</div>
+                </div>
+                <div class="col-md-6 col-12 mb-25">
+                    <label for="kategori">Ürün Kategorisi *</label>
+                    <select class="nice-select" name="urun_kategori_duzenle" required>
+                      {% for cat in categories %}
+                      <option value="{{cat.id}}" {% if product.categories[0].id == cat.id %}selected{% endif %}>{{cat.id}} - {{cat.name}}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="col-lg-6 col-12 mb-25">
+                  <div class="account-image-upload">
+                    <label for="kategori">Ürün Resmi (Güncellenmek istenmiyorsa boş bırakınız)</label>
+                    <input type="file" name="file" id="account-image-upload">
+                  </div>
+                </div>
+                <div class="col-md-12 col-12 text-center">
+                  <input type="hidden" name="urun_id_duzenle" value="{{product.id}}">
+                  <button type="submit" class="home-fly mt-10 btn btn-round">Ürün Düzenle</button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+        <!------- Ürün Düzenle -------->
+      </div>
+    </div>
+
+  </div>
+</div>
+{% include 'admin/footer.html' %}
+<script src="/static/js/quill.js"></script>
+<script src="/static/js/image-resize.min.js" charset="utf-8"></script>
+<script>
+$('.main-menu .admin_urunler').addClass('active');
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("ProductTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+$("#selectFind").change(function(){
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("selectFind");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("ProductTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+});
+var quill = new Quill('#editor', {
+  theme: 'snow',
+  modules: {
+    imageResize: {
+      displaySize: true
+    },
+    toolbar: [
+     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+     ['bold', 'italic', 'underline', 'strike'],
+     [{ 'color': [] }, { 'background': [] }],
+     [{ 'align': [] }],
+     ['link'],
+     ['clean']
+   ]
+  },
+});
+quill.on('text-change', function(delta, source) {
+  $('#urun_aciklama').val(quill.container.firstChild.innerHTML);
+});
+// quill.setHTML('<b>Hello my friend</b>');
+
+var quill2 = new Quill('#editor2', {
+  theme: 'snow',
+  modules: {
+    imageResize: {
+      displaySize: true
+    },
+    toolbar: [
+     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+     ['bold', 'italic', 'underline', 'strike'],
+     [{ 'color': [] }, { 'background': [] }],
+     [{ 'align': [] }],
+     ['link'],
+     ['clean']
+   ]
+  },
+});
+quill2.on('text-change', function(delta, source) {
+  $('#urun_aciklama_duzenle').val(quill.container.firstChild.innerHTML);
+});
+// quill.setHTML('<b>Hello my friend</b>');
+</script>

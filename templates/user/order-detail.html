@@ -1,0 +1,90 @@
+{% include 'header.html' %}
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-1 d-flex align-items-center justify-content-center">
+            <div class="page-banner pt-20 pb-20">
+                <h1>Sipariş No : {{order_detail.id}}</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Login Section Start -->
+<div class="login-section section mt-20 mb-40">
+    <div class="container pt-0 pb-50">
+      <!------- siparis_detay -------->
+      <a href="/hesabim/siparislerim" class="btn btn-circle hover-theme mt-0 mr-30 mb-30 text-capitalize"><i class="fa fa-arrow-left mr-2"></i> Siparişlerim</a>
+      {% include 'section/flash.html' %}
+      {% if order_items %}
+      <div class="cart-table table-responsive mb-20">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="pro-thumbnail pro-title">Ürün Adı</th>
+                    <th class="pro-price">Adet</th>
+                    <th class="pro-price">Fiyatı</th>
+                    <th class="pro-price">Toplam Fiyat</th>
+                    <th class="pro-remove"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td class="pro-thumbnail pro-title">{{item.name}}</td>
+                    <td class="pro-price"><span>{{item.quantity}}</span></td>
+                    <td class="pro-price"><span>₺{{item.product.price}}</span></td>
+                    <td class="pro-price"><span>₺{{item.product.price|int * item.quantity|int}}</span></td>
+                    <td class="pro-remove"><a target="_blank" href="/urun/{{item.product.id}}/{{item.product.title}}">Görüntüle</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+      {% endif %}
+      {% if order_detail %}
+      <div class="row mt-10 mb-10">
+        <div class="col-lg-4"></div>
+        <div class="col-lg-8">
+          <div class="cart-table table-responsive mb-0">
+            <table class="table border-0">
+                <tbody>
+                    <tr>
+                        <td class="pro-title text-left">Sipariş No </td>
+                        <td class="pro-title text-left"><b>{{order_detail.id}} </b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Sipariş Durumu </td>
+                        <td class="pro-title text-left"><b>{{order_detail.status}}</b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Adres </td>
+                        <td class="pro-title text-left"><b>{{order_detail.address | safe}} </b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Ödeme </td>
+                        <td class="pro-title text-left"><b>{{order_detail.payment}} </b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Sipariş Tarihi </td>
+                        <td class="pro-title text-left"><b>{{order_detail.create.strftime('%d.%m.%Y %H:%M')}} </b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Kargo </td>
+                        <td class="pro-title text-left"><b>{% if order_detail.total|int > 199.9 %}Ücretsiz{% else %}₺10{% endif %}</b></td>
+                    </tr>
+                    <tr>
+                        <td class="pro-title text-left">Toplam Fiyat </td>
+                        <td class="pro-title text-left"><b>₺{{order_detail.total}} </b></td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <!------- siparis_detay -------->
+    </div>
+</div><!-- Login Section End -->
+
+{% include 'footer.html' %}

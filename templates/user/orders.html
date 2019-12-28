@@ -1,0 +1,58 @@
+{% include 'header.html' %}
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-1 d-flex align-items-center justify-content-center">
+            <div class="page-banner pt-20 pb-20">
+                <h1>Siparişlerim</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Login Section Start -->
+<div class="login-section section mt-20 mb-40">
+    <div class="container pt-00 pb-40">
+      <a href="/hesabim" class="btn btn-circle hover-theme mt-0 mr-30 mb-30 text-capitalize"><i class="fa fa-arrow-left mr-2"></i> Hesabım</a>
+      {% include 'section/flash.html' %}
+      <div class="cart-table table-responsive mb-0">
+        <table class="table" id="OrderTable">
+            <thead>
+                <tr>
+                    <th class="pro-thumbnail">No</th>
+                    <th class="pro-price">Fiyat</th>
+                    <th class="pro-title">Ödeme</th>
+                    <th class="pro-title">Durum</th>
+                    <th class="pro-title">Tarih</th>
+                    <th class="pro-remove"></th>
+                </tr>
+            </thead>
+            <tbody>
+              {% if orders %}
+              {% for order in orders %}
+              <tr>
+                  <td class="pro-price">{{order.id}}</td>
+                  <td class="pro-price">₺{{order.total}}</td>
+                  <td class="pro-price">{{order.payment}}</td>
+                  <td class="pro-price">{{order.status}}</td>
+                  <td class="pro-price">{{order.create.strftime('%d.%m.%Y %H:%M')}}</td>
+                  <td class="pro-remove">
+                    <a href="/hesabim/siparis/{{order.id}}"><i class="fa fa-eye"></i> Görüntüle</a>
+                    {% if order.status == 'Hazırlanıyor' %}
+                    <a href="/hesabim/siparisiptal/{{order.id}}"><i class="fa fa-trash-o"></i> İptal Et</a>
+                    {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                  <td class="pro-title" colspan="7">Sipariş Bulunamadı!..</td>
+              </tr>
+              {% endif %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+</div><!-- Login Section End -->
+
+{% include 'footer.html' %}

@@ -1,0 +1,130 @@
+{% include 'admin/header.html' %}
+
+<div class="page-section section pt-50 pb-50">
+  <div class="container">
+    <div class="col-12 mt-0 mb-30">
+        <ul class="nav nav-tabs-five">
+            <li><a class="active" data-toggle="tab" href="#kategori_ekle">Kategori Ekle</a></li>
+            <li><a data-toggle="tab" href="#kategori_guncelle">Kategori Güncelle</a></li>
+        </ul>
+    </div>
+    <div class="tab-content clearfix pt-10 pb-10 pl-10">
+      <div class="tab-pane active" id="kategori_ekle">
+        <!------- Kategori Ekle -------->
+        <form id="contact-form" action="" method="post" class="contact-form mb-20">
+            <div class="row">
+                <div class="col-md-4 col-12 mb-25">
+                    <label for="kategori_adi">Kategori Adı *</label>
+                    <input id="kategori_adi" type="text" name="kategori_adi" placeholder="Kategori Adı" required>
+                </div>
+                <div class="col-md-3 col-12">
+                  <label for="kategori_adi">Anasayfa *</label>
+                  <select class="nice-select" name="kategori_home">
+                    <option value="0">Görünmesin</option>
+                    <option value="1">Görünsün</option>
+                  </select>
+                </div>
+                <div class="col-md-2 col-12 mb-25">
+                    <label for="kategori_sira">Sıralama *</label>
+                    <input id="kategori_sira" type="number" name="kategori_sira" placeholder="Sıra" required>
+                </div>
+                <div class="col-md-3 col-12">
+                  <label style="visibility:hidden">Kategori Ekle</label>
+                  <input type="hidden" name="action" value="yeni">
+                  <input class="mt-0" type="submit" value="Kategori Ekle" style="text-transform: capitalize;">
+                </div>
+            </div>
+        </form>
+        <!------- Kategori Ekle -------->
+      </div>
+      <div class="tab-pane" id="kategori_guncelle">
+        <!------- Kategori Düzenle -------->
+        <style media="screen">
+          #contact-form .nice-select {
+            width: 100%;
+            border: 1px solid #999999;
+            border-radius: 50px;
+            line-height: 44px;
+            height: 45.5px;
+          }
+          #contact-form .nice-select .list {
+            width: 100%;
+          }
+        </style>
+        <form id="contact-form" action="" method="post" class="contact-form mb-20">
+            <div class="row">
+              <div class="col-md-2 col-12 mb-25">
+                  <label for="kategori_adi">ID *</label>
+                  <select id="kategori_adi" name="kategori_id" class="nice-select" required>
+                    {% for cat in categories %}
+                    <option value="{{cat.id}}">{{cat.id}}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="col-md-3 col-12 mb-25">
+                  <label for="kategori_adi">Kategori Adı *</label>
+                  <input id="kategori_adi" type="text" name="kategori_adi" placeholder="Kategori Adı" required>
+              </div>
+              <div class="col-md-2 col-12">
+                <label for="kategori_adi">Anasayfa *</label>
+                <select class="nice-select" name="kategori_home">
+                  <option value="0">Görünmesin</option>
+                  <option value="1">Görünsün</option>
+                </select>
+              </div>
+              <div class="col-md-2 col-12 mb-25">
+                  <label for="kategori_sira">Sıralama *</label>
+                  <input id="kategori_sira" type="number" name="kategori_sira" placeholder="Sıra" required>
+              </div>
+              <div class="col-md-3 col-12">
+                <label style="visibility:hidden">Kategori Güncelle</label>
+                <input type="hidden" name="action" value="guncelle">
+                <input class="mt-0" type="submit" value="Kategori Güncelle" style="text-transform: capitalize;">
+              </div>
+            </div>
+        </form>
+        <!------- Kategori Düzenle -------->
+      </div>
+    </div>
+
+    <!------- Kategoriler -------->
+    <div class="cart-table table-responsive mb-40">
+      <table class="table">
+          <thead>
+              <tr>
+                  <th class="pro-thumbnail">ID</th>
+                  <th class="pro-title">Kategori Adı</th>
+                  <th class="pro-title">Anasayfa</th>
+                  <th class="pro-title">Sıra</th>
+                  <th class="pro-remove"></th>
+              </tr>
+          </thead>
+          <tbody>
+            {% if categories %}
+            {% for cat in categories %}
+            <tr>
+                <td class="pro-thumbnail">{{cat.id}}</td>
+                <td class="pro-title">{{cat.name}}</td>
+                <td class="pro-title">{% if cat.home == '1' %}Görünsün{% else %}Görünmesin{% endif %}</td>
+                <td class="pro-title">{{cat.sort}}</td>
+                <td class="pro-remove">
+                  <a href="/admin/kategori/sil/{{cat.id}}"><i class="fa fa-trash-o"></i> Sil</a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td class="pro-title" colspan="3">Kategori Bulunamadı!..</td>
+            </tr>
+            {% endif %}
+          </tbody>
+      </table>
+    </div>
+    <!------- Kategoriler -------->
+
+  </div>
+</div>
+{% include 'admin/footer.html' %}
+<script>
+$('.main-menu .admin_kategoriler').addClass('active');
+</script>

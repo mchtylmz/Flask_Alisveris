@@ -1,0 +1,91 @@
+{% include 'header.html' %}
+<!-- Checkout Page Start -->
+<div class="page-section section mt-90 mb-30">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Checkout Form s-->
+                <form action="/odeme-tamamla" method="POST" class="checkout-form">
+                   <div class="row row-40">
+                       <div class="col-lg-7 mb-20">
+                           <!-- Billing Address -->
+                           <div id="billing-form" class="mb-40">
+                               <div class="row">
+                                   <div class="col-md-12 col-12 mb-20">
+                                       <label>Adınız Soyadınız *</label>
+                                       <input type="text" placeholder="Adınız" name="adi" value="{{current_user.name}}" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Eposta Adresiniz *</label>
+                                       <input type="email" placeholder="Eposta Adresiniz" name="eposta" value="{{current_user.email}}" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Telefon Numaranız *</label>
+                                       <input type="tel" placeholder="Telefon Numaranız" name="tel" minlength="10" maxlength="12" value="{{current_user.phone}}" required>
+                                   </div>
+                                   <div class="col-12 mb-20">
+                                       <label>Adresiniz *</label>
+                                       <input type="text" placeholder="Adres Bilgisi Giriniz" maxlength="120" name="adres" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Ülke *</label>
+                                       <select class="nice-select" name="ulke" required>
+                                            <option>Türkiye</option>
+                                       </select>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Şehir *</label>
+                                       <input type="text" placeholder="Şehir Yazınız" name="sehir" required>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-lg-5">
+                           <div class="row">
+                               <!-- Cart Total -->
+                               <div class="col-12 mb-20">
+                                   <div class="checkout-cart-total">
+                                       <h4>Ürün <span>Toplam</span></h4>
+                                       <ul>
+                                           {% for i in items %}
+                                           <li>{{items[i]['adi'][0:20]}} X {{items[i]['adet']}} <span>₺{{items[i]['toplam']}}</span></li>
+                                           {% endfor %}
+                                       </ul>
+                                       <p class="cargo">Kargo <span></span></p>
+                                       <h4 class="odenecek">Ödenecek Tutar <span></span></h4>
+                                   </div>
+                               </div>
+                               <!-- Payment Method -->
+                               <div class="col-12 mb-60">
+                                   <div class="checkout-payment-method">
+                                       <div class="single-method">
+                                           <input type="radio" id="payment_check" name="odeme" value="Nakit Ödeme">
+                                           <label for="payment_check">Nakit Öde</label>
+                                           <p data-method="kapida">Lütfen Ödeme Yöntemi Seçiniz, Gerekli Bilgileri Doğru Doldurunuz</p>
+                                       </div>
+                                       <hr>
+                                       <div class="single-method">
+                                           <input type="radio" id="payment_bank" name="odeme" value="Kredi Kartı">
+                                           <label for="payment_bank">Kredi Kartı ile Öde</label>
+                                           <p data-method="kredikarti">Lütfen Ödeme Yöntemi Seçiniz, Gerekli Bilgileri Doğru Doldurunuz</p>
+                                       </div>
+                                       <hr>
+                                       <div class="single-method">
+                                           <input type="checkbox" id="accept_terms" name="sartlar" value="yes" required>
+                                           <label for="accept_terms">Alışveriş şartlarını okudum ve kabul ediyorum</label>
+                                       </div>
+                                   </div>
+                                   <input type="hidden" id="input_total" name="toplam">
+                                   <button type="submit" class="place-order">Siparişi Tamamla</button>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Checkout Page End -->
+
+{% include 'footer.html' %}

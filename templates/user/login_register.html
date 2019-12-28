@@ -1,0 +1,86 @@
+{% include 'header.html' %}
+{% if request.path != '/giris' %}
+<meta http-equiv="refresh" content="0; URL=/giris?next={{ request.args.get('next', '/') }}" />
+{% endif %}
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-1 d-flex align-items-center justify-content-center">
+            <div class="page-banner pt-20 pb-20">
+                <h1>Giriş Yap / Kayıt Ol</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Login Section Start -->
+<div class="login-section section mt-40 mb-40">
+    <div class="container">
+      {% include 'section/flash.html' %}
+        <div class="row">
+            <!-- Login -->
+            <div class="col-md-5 col-12 d-flex">
+                <div class="ee-login">
+                    <h3 class="mb-10 text-center">Giriş Yap</h3>
+                    {% if request.path == '/giris' %}
+                      {% if sonuc.giris %}
+                      <div class="alert alert-{{sonuc.type}}">{{sonuc.message}}</div>
+                      {% endif %}
+                    {% endif %}
+                    <!-- Login Form -->
+                    <form class="mt-5" action="{{url_for('giris')}}" method="post">
+                        <div class="row">
+                            <div class="col-12 mb-30">
+                              <input type="text" placeholder="Eposta Adresiniz" name="eposta" required>
+                            </div>
+                            <div class="col-12 mb-30">
+                              <input type="password" placeholder="Şifreniz" name="pass" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="next" value="{{ request.args.get('next', '/hesabim') }}">
+                            <div class="col-12 text-center">
+                              <input type="submit" value="Giriş Yap">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-2 col-12 d-flex">
+                <div class="login-reg-vertical-boder"></div>
+            </div>
+            <!-- Login With Social -->
+            <div class="col-md-5 col-12 d-flex">
+                <div class="ee-login">
+                    <h3 class="mb-10 text-center">Kayıt Ol</h3>
+                    {% if request.path == '/giris' %}
+                      {% if sonuc.kayit %}
+                      <div class="alert alert-{{sonuc.type}}">{{sonuc.message}}</div>
+                      {% endif %}
+                    {% endif %}
+                    <!-- Register Form -->
+                    <form class="mt-5" action="{{url_for('kayit')}}" method="post">
+                        <div class="row">
+                            <div class="col-12 mb-30">
+                              <input type="text" placeholder="Adınız Soyadınızı Yazınız" name="name" required>
+                            </div>
+                            <div class="col-12 mb-30">
+                              <input type="text" placeholder="Telefon Numaranızı Yazınız" name="phone" rautocomplete="off" equired>
+                            </div>
+                            <div class="col-12 mb-30">
+                              <input type="text" placeholder="Eposta Adresinizi Yazınız" name="email" required>
+                            </div>
+                            <div class="col-12 mb-30">
+                              <input type="password" placeholder="Şifrenizi Yazınız" name="pass" autocomplete="off" required>
+                            </div>
+                            <input type="hidden" name="next" value="{{ request.args.get('next', '/hesabim') }}">
+                            <div class="col-12 text-center">
+                              <input type="submit" value="Kayıt Ol">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- Login Section End -->
+
+{% include 'footer.html' %}

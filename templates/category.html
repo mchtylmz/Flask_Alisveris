@@ -1,0 +1,133 @@
+{% include 'header.html' %}
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-2 d-flex align-items-center justify-content-center">
+            <div class="page-banner">
+                <h1>{{categoryName}}</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Product Section Start -->
+<div class="product-section section mt-40 mb-90">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mb-50">
+                        <div class="col">
+                            <!-- Shop Top Bar Start -->
+                            <div class="shop-top-bar">
+                                <!-- Product View Mode -->
+                                <div class="product-view-mode">
+                                    <a class="active" href="#" data-target="grid"><i class="fa fa-th"></i></a>
+                                    <a href="#" data-target="list"><i class="fa fa-list"></i></a>
+                                </div>
+                                <!-- Product Short -->
+                                <div class="product-short">
+                                    <p>Sırala</p>
+                                    <select name="sortby" class="nice-select">
+                                        <option value="eskiden" {% if request.args.get('sort', '') == 'eskiden' %}selected{% endif %}>
+                                          Tarihe Göre Eskiden Yeniye
+                                        </option>
+                                        <option value="yeniden" {% if request.args.get('sort', '') == 'yeniden' %}selected{% endif %}>
+                                          Tarihe Göre Yeniden Eskiye
+                                        </option>
+                                        <option value="fiyatArtan" {% if request.args.get('sort', '') == 'fiyatArtan' %}selected{% endif %}>
+                                          Fiyata Göre (Artan)
+                                        </option>
+                                        <option value="fiyatAzalan" {% if request.args.get('sort', '') == 'fiyatAzalan' %}selected{% endif %}>
+                                          Fiyata Göre (Azalan)
+                                        </option>
+                                    </select>
+                                </div>
+                            </div><!-- Shop Top Bar End -->
+                        </div>
+                    </div>
+                    <!-- Shop Product Wrap Start -->
+                    <div class="shop-product-wrap grid row">
+                        {% for urun in products %}
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-12 pb-30 pt-10">
+                            <!-- Product Start -->
+                            <div class="ee-product">
+                                <!-- Image -->
+                                <div class="image">
+                                  <a href="/urun/{{urun.id}}/{{urun.title}}" class="img">
+                                    <img src="/static/products/{{urun.image}}" alt="{{urun.title}}" style="border:solid 2.5px #eee;" />
+                                  </a>
+                                  <div class="wishlist-compare">
+                                      <a class="favori{{urun.id}}" data-tooltip="Favorilerime Ekle" onclick="FavoriEkleSil('{{urun.id}}')">
+                                        <i class="ti-heart"></i>
+                                      </a>
+                                  </div>
+                                  <a onclick="sepeteEkle('{{urun.id}}')" class="add-to-cart sepet_durum{{urun.id}}">
+                                    <i class="ti-shopping-cart"></i><span>Sepete Ekle</span>
+                                  </a>
+                                </div>
+                                <!-- Content -->
+                                <div class="content">
+                                    <!-- Category & Title -->
+                                    <div class="category-title">
+                                      <a class="cat urun_kategori{{urun.id}}">{% for cat in urun.categories %} {{cat.name}} {% endfor %}</a>
+                                      <h5 class="title"><a class="urun_adi{{urun.id}}" href="/urun/{{urun.id}}/{{urun.title}}">{{urun.title}}</a></h5>
+                                    </div>
+                                    <!-- Price & Ratting -->
+                                    <div class="price-ratting">
+                                      <h5 class="price text-center" style="width:100%; font-size:18px;">₺{{urun.price}}</h5>
+                                      <h5 class="d-none urun_fiyati{{urun.id}}">{{urun.price}}</h5>
+                                    </div>
+                                </div>
+                            </div><!-- Product End -->
+                            <!-- Product List Start -->
+                            <div class="ee-product-list">
+                                <!-- Image -->
+                                <div class="image">
+                                  <a href="/urun/{{urun.id}}/{{urun.title}}" class="img">
+                                    <img src="/static/products/{{urun.image}}" alt="{{urun.title}}" style="border:solid 2.5px #eee;" />
+                                  </a>
+                                </div>
+                                <!-- Content -->
+                                <div class="content">
+                                    <!-- Category & Title -->
+                                    <div class="head-content">
+                                        <div class="category-title">
+                                          <a class="cat">{% for cat in urun.categories %} {{cat.name}} {% endfor %}</a>
+                                          <h5 class="title"><a href="/urun/{{urun.id}}/{{urun.title}}">{{urun.title}}</a></h5>
+                                        </div>
+                                        <h5 class="price text-center" style="font-size:18px;">₺{{urun.price}}</h5>
+                                    </div>
+                                    <div class="left-content">
+                                        <div class="desc mt-10">
+                                            <p>{{urun.brief[0:75]}}..</p>
+                                        </div>
+                                        <div class="actions">
+                                          <a onclick="sepeteEkle('{{urun.id}}')" class="add-to-cart sepet_durum{{urun.id}}">
+                                            <i class="ti-shopping-cart"></i><span>Sepete Ekle</span>
+                                          </a>
+                                          <div class="wishlist-compare">
+                                              <a class="favori{{urun.id}}" data-tooltip="Favorilerime Ekle" onclick="FavoriEkleSil('{{urun.id}}')">
+                                                <i class="ti-heart"></i>
+                                              </a>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="right-content">
+                                        <p class="pt-10">{{urun.brief}}..</p>
+                                    </div>
+                                </div>
+                            </div><!-- Product List End -->
+                        </div>
+                        {% endfor %}
+                    </div><!-- Shop Product Wrap End -->
+                </div>
+            </div>
+        </div>
+    </div><!-- Feature Product Section End -->
+
+{% include 'footer.html' %}
+<script type="text/javascript">
+  $(".product-short select[name=sortby]").change(function(){
+    window.location.href = '?sort='+this.value;
+  });
+</script>

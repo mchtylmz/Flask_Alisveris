@@ -1,0 +1,42 @@
+{% include 'admin/header.html' %}
+
+<div class="page-section section pt-50 pb-50">
+  <div class="container">
+     <div class="cart-table table-responsive mb-40">
+       <table class="table">
+           <thead>
+               <tr>
+                   <th class="pro-thumbnail">ID</th>
+                   <th class="pro-title">Ad Soyad</th>
+                   <th class="pro-price">Telefon Numarası</th>
+                   <th class="pro-price">Eposta</th>
+                   <th class="pro-price">Durumu</th>
+                   <th class="pro-remove"></th>
+               </tr>
+           </thead>
+           <tbody>
+               {% for user in users %}
+               <tr>
+                   <td class="pro-thumbnail">{{user.id}}</td>
+                   <td class="pro-title">{{user.name}}</td>
+                   <td class="pro-price">{{user.phone}}</td>
+                   <td class="pro-price"><span>{{user.email}}</span></td>
+                   <td class="pro-price">{% if user.is_active == True %} Aktif {% else %} Pasif {% endif %}</td>
+                   <td class="pro-remove">
+                     {% if user.id == current_user.id %}
+                     {% for role in user.roles %} <b>{{role.name}}</b> {% endfor %}
+                     {% else %}
+                     <a href="/admin/kullanici_sil/{{user.id}}"><i class="fa fa-trash-o"></i> Sil</a>
+                     {% endif %}
+                   </td>
+               </tr>
+               {% endfor %}
+           </tbody>
+       </table>
+     </div>
+  </div>
+</div>
+{% include 'admin/footer.html' %}
+<script>
+$('.main-menu .admin_kullanici').addClass('active');
+</script>

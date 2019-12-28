@@ -1,0 +1,86 @@
+{% include 'header.html' %}
+
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-1 d-flex align-items-center justify-content-center">
+            <div class="page-banner pt-20 pb-20">
+                <h1>Hoş Geldin, {{current_user.name}}</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Login Section Start -->
+<div class="login-section section mt-40 mb-40 pt-10 pb-30">
+    <div class="container">
+      {% include 'section/flash.html' %}
+      <div class="row justify-content-center">
+        <style media="screen">
+          .agrid, .a2grid {
+            border: solid 2px #eee;
+            box-sizing: border-box;
+            margin: 10px;
+            padding: 35px 10px 15px 10px;
+            border-radius: 12px;
+          }
+          .agrid a, .a2grid a {
+            width: 100%;
+          }
+          .hesab_icon {
+            padding: 10px;
+            background-color: #eee;
+            border-radius: 40%;
+          }
+          a:hover {
+            color:#000
+          }
+          .adminbg {
+            background-color: rgba(238, 238, 238, 0.25);
+          }
+        </style>
+        <div class="col-lg-3 agrid text-center">
+          <a class="title" href="/hesabim/siparislerim">
+            <i class="icofont icofont-ui-travel icofont-3x hesab_icon"></i>
+            <h4 class="mt-20">Siparişlerim</h4>
+          </a>
+        </div>
+
+        <div class="col-lg-3 agrid text-center">
+          <a class="title" href="/hesabim/blgilerim">
+            <i class="icofont icofont-info-circle icofont-3x hesab_icon"></i>
+            <h4 class="mt-20">Bilgilerim</h4>
+          </a>
+        </div>
+
+        <div class="col-lg-3 agrid text-center">
+          <a class="title" href="/hesabim/favorilerim">
+            <i class="icofont icofont-heart-alt icofont-3x hesab_icon"></i>
+            <h4 class="mt-20">Favorilerim</h4>
+          </a>
+        </div>
+
+        <div class="col-lg-3 agrid text-center">
+          <a class="title" href="/cikis">
+            <i class="icofont icofont-logout icofont-3x hesab_icon"></i>
+            <h4 class="mt-20">Çıkış Yap</h4>
+          </a>
+        </div>
+
+        {% if current_user.roles[0] or none: %}
+          {% if current_user.roles[0]['name'] == 'Admin': %}
+          <div class="col-lg-2 a2grid text-center adminbg">
+            <a class="title" href="/admin">
+              <i class="icofont icofont-ui-unlock icofont-3x hesab_icon"></i>
+              <h4 class="mt-20">Admin Sayfası</h4>
+            </a>
+          </div>
+          {% endif %}
+        {% endif %}
+
+      </div>
+
+    </div>
+</div><!-- Login Section End -->
+
+{% include 'footer.html' %}

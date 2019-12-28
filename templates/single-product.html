@@ -1,0 +1,81 @@
+{% include 'header.html' %}
+<!-- Single Product Section Start -->
+<div class="product-section section mt-40 mb-90">
+    <div class="container">
+        <div class="row mb-90">
+            <div class="col-lg-6 col-12 mb-0">
+                <!-- Image -->
+                <div class="single-product-image">
+                    <div class="tab-content">
+                        <div id="single-image-1" class="tab-pane fade show active big-image-slider">
+                            <div class="big-image">
+                                <img src="/static/products/{{product.image}}">
+                                <a href="/static/products/{{product.image}}" class="big-image-popup"><i class="fa fa-search-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 mb-20">
+                <!-- Content -->
+                <div class="single-product-content">
+                    <!-- Category & Title -->
+                    <div class="head-content">
+                        <div class="category-title">
+                          <a class="cat urun_kategori{{product.id}}">{% for cat in product.categories %} {{cat.name}} {% endfor %}</a>
+                          <h5 class="title"><a class="urun_adi{{product.id}}">{{product.title}}</a></h5>
+                        </div>
+                        <h5 class="price text-center" style="font-size: 32px;">₺{{product.price}}</h5>
+                        <h5 class="d-none urun_fiyati{{product.id}}">{{product.price}}</h5>
+                    </div>
+                    <div class="single-product-description">
+                        <div class="desc mt-20">
+                            <p>{{product.brief}}</p>
+                        </div>
+                        <div class="quantity-colors">
+                            <div class="quantity">
+                                <h5>Adet</h5>
+                                <div class="pro-qty"><input type="text" name="{{product.id}}_adet" value="1"></div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                          <a onclick="sepeteEkle('{{product.id}}')" class="add-to-cart sepet_durum{{product.id}}">
+                            <i class="ti-shopping-cart"></i><span>Sepete Ekle</span>
+                          </a>
+                          <div class="wishlist-compare">
+                              <a class="favori{{product.id}}" data-tooltip="Favorilerime Ekle" onclick="FavoriEkleSil('{{product.id}}')">
+                                <i class="ti-heart"></i>
+                              </a>
+                          </div>
+                        </div>
+                        <div class="share">
+                            <h5>Paylaş: </h5>
+                            <a href="#paylas"><i class="fa fa-facebook"></i></a>
+                            <a href="#paylas"><i class="fa fa-twitter"></i></a>
+                            <a href="#paylas"><i class="fa fa-instagram"></i></a>
+                            <a href="#paylas"><i class="fa fa-google-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-12 ml-auto mr-auto">
+                <ul class="single-product-tab-list nav">
+                    <li><a href="#product-description" class="active" data-toggle="tab">Ürün Açıklama</a></li>
+                </ul>
+                <div class="single-product-tab-content tab-content">
+                    <div class="tab-pane fade show active" id="product-description">
+                        <div class="row">
+                            <div class="single-product-description-content col-lg-12 col-12">
+                                <p>{{product.description | safe}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!-- Single Product Section End -->
+
+{% include 'footer.html' %}

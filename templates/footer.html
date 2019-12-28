@@ -1,0 +1,210 @@
+
+<!-- Footer Section Start -->
+<div class="footer-section section bg-ivory">
+    <!-- Footer Top Section Start -->
+    <div class="footer-top-section section pt-40 pb-50">
+        <div class="container">
+            <!-- Footer Widget Start -->
+            <div class="row">
+                <div class="col mb-40">
+                    <div class="footer-widget text-center">
+                        <div class="footer-logo">
+                            <img src="/static/images/logo.png" alt="Flask Shop Project | Betül Cihan Mücahit">
+                        </div>
+                        <p>Keyifli ve Güvenli Alışveriş</p>
+                    </div>
+                </div>
+            </div><!-- Footer Widget End -->
+            <div class="row">
+                <!-- Footer Widget Start -->
+                <div class="col-lg-4 col-md-4 col-12 mb-40">
+                    <div class="footer-widget">
+
+                        <p class="contact-info">
+                            <span>Adres</span>
+                            Adres Bilgisi
+                        </p>
+                        <p class="contact-info">
+                            <span>Müşteri Hizmetleri</span>
+                            <a href="tel:0850 000 00 00">0850 000 00 00</a>
+                        </p>
+                        <p class="contact-info">
+                            <span>Eposta Adresimiz</span>
+                            <a href="mailto:mail@mail.com">mail@mail.com</a>
+                        </p>
+                    </div>
+                </div><!-- Footer Widget End -->
+                <!-- Footer Widget Start -->
+                <div class="col-lg-4 col-md-4 col-12 mb-40">
+                    <div class="footer-widget">
+                        <ul class="link-widget">
+                          <li><a href="/">Anasayfa</a></li>
+                          <li><a href="/giris">Giriş Yap / Kayıt Ol</a></li>
+                          <li><a href="/hesabim">Hesabım</a></li>
+                          <li><a href="/sepet">Sepet</a></li>
+                          <li><a href="/iletisim">İletişim</a></li>
+                        </ul>
+                    </div>
+                </div><!-- Footer Widget End -->
+                <!-- Footer Widget Start -->
+                <div class="col-lg-4 col-md-4 col-12 mb-40">
+                    <div class="footer-widget">
+                        <ul class="link-widget footercategory">
+                          {% for i in range(1,6) %}
+                          <li><a href="/kategori/{{i}}">Kategori {{i}}</a></li>
+                          {% endfor %}
+                        </ul>
+                    </div>
+                </div><!-- Footer Widget End -->
+            </div>
+        </div>
+    </div><!-- Footer Bottom Section Start -->
+    <!-- Footer Bottom Section Start -->
+    <div class="footer-bottom-section section">
+        <div class="container">
+            <div class="row">
+                <!-- Footer Copyright -->
+                <div class="col-lg-6 col-12">
+                    <div class="footer-copyright"><p>&copy; Copyright, 2019 Tüm Hakları Saklıdır | Betül Cihan Mücahit</p></div>
+                </div>
+                <!-- Footer Payment Support -->
+                <div class="col-lg-6 col-12">
+                    <div class="footer-payments-image"><img src="/static/images/payment-support.png" alt="Flask Shop Payment"></div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Footer Bottom Section Start -->
+</div><!-- Footer Section End -->
+<!-- JS ============================================ -->
+<!-- jQuery JS -->
+<script src="{{ url_for('static', filename='js/vendor/jquery-1.12.4.min.js') }}"></script>
+<!-- Popper JS -->
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<!-- Plugins JS -->
+<script src="{{ url_for('static', filename='js/plugins.js') }}"></script>
+<!-- Main JS -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script type="text/javascript">
+  $(window).on("load", function (e) {
+      console.log('deneme');
+      $('#status').fadeOut();
+      $('#preloader').delay(250).fadeOut('slow');
+      $('body').delay(250).css({'overflow':'visible'});
+  })
+</script>
+<script type="text/javascript">
+  function sepeteEkle(id){
+    if ( $( ".sepet_durum"+id ).hasClass( "added" ) ) {
+      sepettenCikar(id);
+    } else {
+      $.post("/sepete_ekle/"+id,
+      {
+        id: parseInt(id),
+        adi: $('.urun_adi'+id).length ? $('.urun_adi'+id).first().text():'',
+        fiyat: $('.urun_fiyati'+id).length ? parseFloat($('.urun_fiyati'+id).first().text()):0,
+        adet: $("input[name="+id+"_adet]").length ? parseInt( $("input[name="+id+"_adet]").val() ): 1
+      },
+      function(data, status){
+        if (data == 'eklendi') {
+          setTimeout(function(){
+             headerSepetListele();
+             $('.wishbtn'+id).text('Eklendi');
+          }, 250);
+        }
+      });
+    }
+  }
+  function sepettenCikar(id){
+    $.post("/sepetten_cikar/"+id,
+    {
+      id: parseInt(id),
+    },
+    function(data, status){
+      if (data == 'silindi') {
+        setTimeout(function(){
+          headerSepetListele();
+          $('.sepet_sayfa_urun'+id).remove();
+          $(".sepet_durum"+id).removeClass('added').find('i').removeClass('ti-check').addClass('ti-shopping-cart').siblings('span').text('sepete ekle');
+          $('.wishbtn'+id).text('Sepete Ekle');
+        }, 250);
+      }
+    });
+  }
+  function FavoriEkleSil(id) {
+    $('.favori'+id).attr('data-tooltip', 'Ekleniyor...');
+    $.post("/favori_ekle",{id: parseInt(id)},function(data, status){
+      if (data == 'Eklendi' || data == 'Zaten Ekli') {
+        $('.favori'+id).addClass('added');
+        setTimeout(function() {
+          headerFavoriCount();
+        }, 250);
+      } else {
+        $('.favori'+id).removeClass('added');
+      }
+      $('.favori'+id).attr('data-tooltip', data);
+    });
+  }
+  function headerSepetListele(){
+    var sepet_sayi = 0;
+    var sepet_toplam = 0;
+    $('.mini-cart-products').html('');
+    $.post("/sepet_listele",function(data, status){
+      $.each( data, function( key, value ) {
+          sepet_toplam += parseFloat(value['fiyat']) * parseInt(value['adet']);
+          $('.mini-cart-products').append('<li class="sepet_urun_sil'+value['id']+'" style="border-bottom: solid 1px #eee;">'
+              +'<div class="content">'
+                  +'<a href="/urun/{{i}}" class="title">'+value['adi']+'</a>'
+                  +'<span class="qty">Adet: '+value['adet']+'</span>'
+                  +'<span class="price pb-10">Toplam: ₺'+(parseFloat(value['fiyat']) * parseInt(value['adet']))+'</span>'
+                  +'</div>'
+              +"<button class=\"remove\" onclick=\"sepettenCikar('"+value['id']+"')\"><i class=\"fa fa-trash-o\"></i></button>"
+          +'</li>');
+          sepet_sayi += 1;
+      });
+      $('.header-cart span').text(sepet_sayi);
+      $('.sub-total span').text('₺'+sepet_toplam);
+
+      $('.cart-summary-wrap .sepet_toplam span').text('₺'+sepet_toplam);
+      $('.cart-summary-wrap .cargo span').text('Ücretsiz');
+      var son_sepet_toplam = sepet_toplam;
+      if (sepet_toplam > 0 && sepet_toplam < 199.999999) {
+        $('.cart-summary-wrap .cargo span').text('₺10');
+        son_sepet_toplam = sepet_toplam + 10;
+      }
+      $('.cart-summary-wrap .odenecek span').text('₺'+son_sepet_toplam);
+
+      $('.checkout-cart-total .cargo span').text('Ücretsiz');
+      if (sepet_toplam > 0 && sepet_toplam < 199.999999) {
+         $('.checkout-cart-total .cargo span').text('₺10');
+         son_sepet_toplam = sepet_toplam + 10;
+      }
+      $('.checkout-cart-total .odenecek span').text('₺'+son_sepet_toplam);
+      $('#input_total').val(son_sepet_toplam);
+    });
+  }
+  function headerCategory(){
+    $('.HeadCategory').html('');
+    $('.footercategory').html('');
+    $.post("/header_category",function(data, status){
+      $.each( data, function( key, value ) {
+          $('.footercategory').append('<li><a href="/kategori/'+key+'/'+value+'">'+value+'</a></li>');
+          $('.HeadCategory').append('<li><a href="/kategori/'+key+'/'+value+'">'+value+'</a></li>');
+      });
+    });
+  }
+  function headerFavoriCount() {
+    $.post("/favori_say",function(data, status){
+      $('.header-wishlist span').text(data);
+    });
+  }
+  setTimeout(function(){
+    headerSepetListele();
+    headerCategory();
+    headerFavoriCount();
+  }, 250);
+
+</script>
+</body>
+</html>

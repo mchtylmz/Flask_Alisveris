@@ -1,0 +1,61 @@
+{% include 'header.html' %}
+<!-- Page Banner Section Start -->
+<div class="page-banner-section section">
+    <div class="page-banner-wrap row row-0 d-flex align-items-center ">
+        <!-- Page Banner -->
+        <div class="col-lg-12 col-12 order-lg-1 d-flex align-items-center justify-content-center">
+            <div class="page-banner pt-20 pb-20">
+                <h1>{{user.name}}</h1>
+            </div>
+        </div>
+    </div>
+</div><!-- Page Banner Section End -->
+<!-- Page Start -->
+<div class="page-section section mt-90 mb-30">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Form s-->
+                <form action="/hesabim/bilgiguncelle" method="POST" class="checkout-form">
+                   <div class="row row-40 justify-content-center">
+                       <div class="col-lg-9 mb-20">
+                           <div id="billing-form" class="mb-40">
+                               <div class="row">
+                                   <div class="col-md-12 col-12 mb-20">
+                                       <label>Adınız Soyadınız *</label>
+                                       <input type="text" placeholder="Adınız" name="adi" value="{{user.name}}" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Eposta Adresiniz *</label>
+                                       <input type="email" placeholder="Eposta Adresiniz" name="eposta" value="{{user.email}}" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Telefon Numaranız *</label>
+                                       <input type="tel" placeholder="Telefon Numaranız" name="tel" minlength="10" maxlength="12" value="{{user.phone}}" required>
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Yeni Şifreniz <small>(Değiştirmek istemiyorsanız boş bırakınız)</small></label>
+                                       <input type="password" placeholder="Yeni Şifreniz" name="sifre">
+                                   </div>
+                                   <div class="col-md-6 col-12 mb-20">
+                                       <label>Tekrar Yeni Şifreniz</label>
+                                       <input type="password" placeholder="Tekrar Yeni Şifreniz" name="tsifre">
+                                   </div>
+                                   <div class="col-md-12 col-12 mb-20 text-center">
+                                     <input type="hidden" name="user_id" value="{{user.id}}">
+                                     <button type="submit" class="place-order" style="margin-top:12px !important; float:none">
+                                       Bilgilerim Güncelle
+                                     </button>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Checkout Page End -->
+
+{% include 'footer.html' %}

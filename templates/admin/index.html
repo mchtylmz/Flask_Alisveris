@@ -1,0 +1,171 @@
+{% include 'admin/header.html' %}
+<div class="page-section section pt-50 pb-50">
+  <div class="container">
+    {% include 'section/flash.html' %}
+    <div class="col-12 mt-0 mb-30">
+        <ul class="nav nav-tabs-five">
+          {% if activaTab == 'siparis_detay' %}
+          <li><a href="/admin">Siparişler</a></li>
+          <li><a class="active" data-toggle="tab" href="#siparis_detay">Sipariş Detay</a></li>
+          {% else %}
+          <li><a class="active" data-toggle="tab" href="#siparisler">Siparişler</a></li>
+          <li><a>Sipariş Detay</a></li>
+          {% endif %}
+        </ul>
+    </div>
+    <div class="tab-content clearfix pt-10 pb-10 pl-10">
+      <div class="tab-pane {% if activaTab != 'siparis_detay' %} active {% endif %}" id="siparisler">
+        <!------- Siparişler -------->
+        <form class="contact-form mb-20">
+            <input id="input" type="text" onkeyup="myFunction()" placeholder="Sipariş Numarasına Göre Arama...">
+        </form>
+        <div class="cart-table table-responsive mb-40">
+          <table class="table" id="OrderTable">
+              <thead>
+                  <tr>
+                      <th class="pro-thumbnail">No</th>
+                      <th class="pro-price text-left">Kullanıcı</th>
+                      <th class="pro-price">Fiyat</th>
+                      <th class="pro-title">Ödeme</th>
+                      <th class="pro-title">Durum</th>
+                      <th class="pro-title">Tarih</th>
+                      <th class="pro-remove"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                {% if orders %}
+                {% for order in orders %}
+                <tr>
+                    <td class="pro-price">{{order.id}}</td>
+                    <td class="pro-price text-left">{{order.user.name}}</td>
+                    <td class="pro-price">₺{{order.total}}</td>
+                    <td class="pro-price">{{order.payment}}</td>
+                    <td class="pro-price">{{order.status}}</td>
+                    <td class="pro-price">{{order.create.strftime('%d.%m.%Y %H:%M')}}</td>
+                    <td class="pro-remove">
+                      <a href="/admin/siparis/{{order.id}}"><i class="fa fa-eye"></i> Görüntüle</a>
+                      <a href="/admin/siparissil/{{order.id}}"><i class="fa fa-trash-o"></i> Sil</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td class="pro-title" colspan="7">Sipariş Bulunamadı!..</td>
+                </tr>
+                {% endif %}
+              </tbody>
+          </table>
+        </div>
+        <!------- Siparişler -------->
+      </div>
+      <div class="tab-pane pb-90 {% if activaTab == 'siparis_detay' %} active {% endif %}" id="siparis_detay">
+        <!------- siparis_detay -------->
+        {% if order_items %}
+        <div class="cart-table table-responsive mb-20">
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th class="pro-thumbnail pro-title">Ürün Adı</th>
+                      <th class="pro-price">Adet</th>
+                      <th class="pro-price">Fiyatı</th>
+                      <th class="pro-price">Toplam Fiyat</th>
+                      <th class="pro-remove"></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for item in order_items %}
+                  <tr>
+                      <td class="pro-thumbnail pro-title">{{item.name}}</td>
+                      <td class="pro-price"><span>{{item.quantity}}</span></td>
+                      <td class="pro-price"><span>₺{{item.product.price}}</span></td>
+                      <td class="pro-price"><span>₺{{item.product.price|int * item.quantity|int}}</span></td>
+                      <td class="pro-remove"><a target="_blank" href="/urun/{{item.product.id}}/{{item.product.title}}">Görüntüle</a></td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+        </div>
+        {% endif %}
+        {% if order_detail %}
+        <form class="checkout-form" action="/admin/siparistamamla" method="post">
+        <div class="row mt-10 mb-10">
+          <div class="col-lg-4"></div>
+          <div class="col-lg-8">
+            <div class="cart-table table-responsive mb-0">
+              <table class="table border-0">
+                  <tbody>
+                      <tr>
+                          <td class="pro-title text-left">Sipariş No </td>
+                          <td class="pro-title text-left"><b>{{order_detail.id}} </b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Sipariş Veren Kullanıcı </td>
+                          <td class="pro-title text-left"><b>{{order_detail.user.name}} </b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Sipariş Durumu </td>
+                          <td class="pro-title text-left">
+                            <select class="nice-select mb-0" name="siparis_durumu" required>
+                                <option {% if order_detail.status == 'İptal Edildi' %}selected{% endif %}>İptal Edildi</option>
+                                <option {% if order_detail.status == 'Hazırlanıyor' %}selected{% endif %}>Hazırlanıyor</option>
+                                <option {% if order_detail.status == 'Tamamlandı' %}selected{% endif %}>Tamamlandı</option>
+                            </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Adres </td>
+                          <td class="pro-title text-left"><b>{{order_detail.address | safe}} </b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Ödeme </td>
+                          <td class="pro-title text-left"><b>{{order_detail.payment}} </b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Sipariş Tarihi </td>
+                          <td class="pro-title text-left"><b>{{order_detail.create.strftime('%d.%m.%Y %H:%M')}} </b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Kargo </td>
+                          <td class="pro-title text-left"><b>{% if order_detail.total|int > 199.9 %}Ücretsiz{% else %}₺10{% endif %}</b></td>
+                      </tr>
+                      <tr>
+                          <td class="pro-title text-left">Toplam Fiyat </td>
+                          <td class="pro-title text-left"><b>₺{{order_detail.total}} </b></td>
+                      </tr>
+                  </tbody>
+              </table>
+            </div>
+            <input type="hidden" name="siparis_id" value="{{order_detail.id}}">
+            <button type="submit" class="place-order">Siparişi Tamamla</button>
+          </div>
+        </div>
+        </form>
+        {% endif %}
+        <!------- siparis_detay -------->
+      </div>
+    </div>
+
+  </div>
+</div>
+{% include 'admin/footer.html' %}
+<script>
+$('.main-menu .admin').addClass('active');
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("input");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("OrderTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[4];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
