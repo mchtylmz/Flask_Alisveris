@@ -12,4 +12,5 @@ Betül Saliha KUZU -
 Cihan ALBAYRAK 
 
 Proje Düzce Üniversitesi Biglisayar mühendisliği Betik Diller dersinde proje olarak geliştirilmiştir
+
 Projeyle ilgili iletişim için mail adresi mchtylmz149@gmail.com
